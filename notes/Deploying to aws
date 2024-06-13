@@ -1,0 +1,796 @@
+https://chatgpt.com/share/7a89944f-d185-46fa-a902-9186d4306ddf
+
+## PART A
+
+1. login to aws
+2. create an ec2 instance
+3. download the pem file to allow ssh into the instance
+
+from ur window power shell [generate ssh]
+
+#ssh-keygen -t [rsa_name] -b 4096 -C "your_email@example.com"
+
+exaple:
+
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+This will create a private key (id_rsa) and a public key (id_rsa.pub).
+Note: you can either use passphrase(1a) or not (1b)
+
+
+## PART B
+
+##### Adding the SSH Key to GitHub
+
+## Copy the Public Key:
+
+Open the generated public key file (id_rsa.pub) in a text editor.
+Copy its contents.
+Add the Key to GitHub:
+
+Go to GitHub.
+1. Click on your profile picture in the upper-right corner, then click Settings.
+2. In the left sidebar, click SSH and GPG keys.
+3. Click New SSH key.
+4. Paste the public key into the "Key" field and give it a title.
+5. Click Add SSH key.
+
+## Using the SSH Key in GitHub Actions
+To use the SSH key in a GitHub Actions workflow, you need to store it as a secret in your GitHub repository and then configure your workflow to use it.
+
+Store the Private Key as a Secret:
+
+1. Go to your GitHub repository.
+2. Click on Settings.
+3. In the left sidebar, click Secrets and variables > Actions.
+4. Click New repository secret.
+5. Add the private key (id_rsa) as a secret named SSH_PRIVATE_KEY.
+
+
+
+## PART C
+
+##### Configure the ec2 instance
+
+Adding the public key to the `~/.ssh/authorized_keys` file on your EC2 instance can be done via the AWS Management Console by accessing your instance using the EC2 Instance Connect feature or by connecting manually through SSH. Here are the steps to do this:
+
+### Method 1: Using EC2 Instance Connect (if supported)
+
+1. **Login to AWS Management Console:**
+   - Go to the [AWS Management Console](https://aws.amazon.com/console/).
+
+2. **Navigate to EC2:**
+   - In the AWS Management Console, click on `Services` and select `EC2`.
+
+3. **Find Your Instance:**
+   - In the EC2 Dashboard, click on `Instances` in the left sidebar.
+   - Select the instance you want to access.
+
+4. **Connect to Your Instance:**
+   - Click the `Connect` button at the top of the page.
+   - Choose `EC2 Instance Connect` and click `Connect`.
+
+5. **Add the Public Key:**
+   - Once connected, you will have a terminal access to your instance.
+   - Run the following commands to add your public key to the `authorized_keys` file:
+     ```sh
+     mkdir -p ~/.ssh
+     echo "your_public_key_contents" >> ~/.ssh/authorized_keys
+     chmod 700 ~/.ssh
+     chmod 600 ~/.ssh/authorized_keys
+     ```
+   - Replace `your_public_key_contents` with the actual contents of your `id_rsa.pub` file.
+
+### Method 2: Using SSH (if Instance Connect is not available)
+
+1. **Login to AWS Management Console:**
+   - Go to the [AWS Management Console](https://aws.amazon.com/console/).
+
+2. **Navigate to EC2:**
+   - In the AWS Management Console, click on `Services` and select `EC2`.
+
+3. **Find Your Instance:**
+   - In the EC2 Dashboard, click on `Instances` in the left sidebar.
+   - Select the instance you want to access.
+
+4. **Get Public DNS or IP:**
+   - Note the `Public DNS (IPv4)` or `IPv4 Public IP` address of the instance from the instance description.
+
+5. **Connect Using SSH:**
+   - Open a terminal on your local machine.
+   - Use the following command to connect to your instance:
+     ```sh
+     ssh -i path_to_your_private_key.pem ec2-user@your_instance_public_dns_or_ip
+     ```
+   - Replace `path_to_your_private_key.pem` with the path to your PEM file, `ec2-user` with the username (commonly `ec2-user` for Amazon Linux or `ubuntu` for Ubuntu (check the instance properties to see the user)), and `your_instance_public_dns_or_ip` with the public DNS or IP of your instance.
+
+6. **Add the Public Key:**
+   - Once connected, run the following commands to add your public key to the `authorized_keys` file:
+     ```sh
+     mkdir -p ~/.ssh
+     echo "your_public_key_contents" >> ~/.ssh/authorized_keys
+     chmod 700 ~/.ssh
+     chmod 600 ~/.ssh/authorized_keys
+     ```
+   - Replace `your_public_key_contents` with the actual contents of your `id_rsa.pub` file.
+
+### Summary
+
+These methods allow you to add your public SSH key to your EC2 instance so that you can securely connect using the private key. The first method uses EC2 Instance Connect, which is a quick and easy way to access your instance from the browser. The second method involves connecting via SSH, which requires you to have the private key file that matches the key pair associated with your EC2 instance.
+
+By following these steps, you can ensure that your public key is added to the `authorized_keys` file, allowing you to connect securely to your EC2 instance.
+
+
+## verifying and setting valid permission to files
+The error message indicates that the `authorized_keys` file does not exist in the `~/.ssh` directory on your EC2 instance. You need to create this file and add your public key to it.
+
+### Step-by-Step Guide to Create and Configure `authorized_keys`
+
+1. **Connect to Your EC2 Instance**
+
+   Use a method that works (e.g., EC2 Instance Connect or a previously working SSH key) to connect to your EC2 instance:
+
+   ```sh
+   ssh -i path_to_another_private_key.pem ubuntu@your_instance_public_dns_or_ip
+   ```
+
+2. **Create the `.ssh` Directory and `authorized_keys` File**
+
+   If the `.ssh` directory and the `authorized_keys` file do not exist, you need to create them and set the appropriate permissions.
+
+   ```sh
+   mkdir -p ~/.ssh
+   touch ~/.ssh/authorized_keys
+   chmod 700 ~/.ssh
+   chmod 600 ~/.ssh/authorized_keys
+   ```
+
+3. **Add Your Public Key to `authorized_keys`**
+
+   Copy the contents of your `id_rsa.pub` file from your local machine and add it to the `authorized_keys` file on the EC2 instance.
+
+   On your local machine, display the contents of your public key:
+
+   ```sh
+   cat ~/.ssh/id_rsa.pub
+   ```
+
+   On your EC2 instance, open the `authorized_keys` file with a text editor like `nano` or `vim`, and paste the public key contents:
+
+   ```sh
+   nano ~/.ssh/authorized_keys
+   ```
+
+   Paste your public key into the file and save it.
+
+4. **Verify Permissions**
+
+   Ensure the permissions are set correctly for the `.ssh` directory and `authorized_keys` file:
+
+   ```sh
+   chmod 700 ~/.ssh
+   chmod 600 ~/.ssh/authorized_keys
+   ```
+
+5. **Test SSH Connection**
+
+   Disconnect from the EC2 instance and try to reconnect using your SSH key to verify that the setup is correct:
+
+   ```sh
+   ssh -i ~/.ssh/id_rsa ubuntu@your_instance_public_dns_or_ip
+   ```
+
+### Update GitHub Actions Workflow
+
+Make sure your GitHub Actions workflow is correctly set up to use the SSH key for deployment:
+
+#### Example Workflow
+
+```yaml
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install rsync
+      run: sudo apt-get install -y rsync
+
+    - name: Deploy files to EC2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOSTNAME: ${{ secrets.HOSTNAME }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H $HOSTNAME >> ~/.ssh/known_hosts
+        rsync -avzr --delete ./web $REMOTE_USER@$HOSTNAME:/var/app
+```
+
+### Summary
+
+1. **Create and configure `authorized_keys`** on your EC2 instance.
+2. **Add your public key** to the `authorized_keys` file.
+3. **Verify permissions** on the `.ssh` directory and `authorized_keys` file.
+4. **Test the SSH connection** to ensure it works with your key.
+5. **Ensure your GitHub Actions workflow** is correctly configured to use the SSH key.
+
+By following these steps, you should be able to resolve the `Permission denied (publickey)` error and successfully deploy using `rsync` in your GitHub Actions workflow.
+
+
+## OR THIS
+
+It seems like there might be a typo or misunderstanding in the filename. The error message indicates that the system is looking for a file named `/home/ubuntu/.ssh/authorized_key` (note the singular "authorized_key"), but the correct filename should be `/home/ubuntu/.ssh/authorized_keys` (plural "authorized_keys").
+
+Let's correct this issue step by step:
+
+### Correcting the `authorized_keys` File
+
+1. **Connect to Your EC2 Instance**
+
+   Use SSH to connect to your EC2 instance:
+
+   ```sh
+   ssh -i path_to_your_private_key.pem ubuntu@your_instance_public_dns_or_ip
+   ```
+
+2. **Check for Existing `.ssh` Directory and `authorized_keys` File**
+
+   First, check if the `.ssh` directory exists:
+
+   ```sh
+   ls -la ~/.ssh
+   ```
+
+   If the `.ssh` directory does not exist, create it:
+
+   ```sh
+   mkdir -p ~/.ssh
+   ```
+
+   Next, check if the `authorized_keys` file exists:
+
+   ```sh
+   ls -la ~/.ssh/authorized_keys
+   ```
+
+   If it does not exist, create it:
+
+   ```sh
+   touch ~/.ssh/authorized_keys
+   ```
+
+3. **Set Correct Permissions**
+
+   Ensure the `.ssh` directory and `authorized_keys` file have the correct permissions:
+
+   ```sh
+   chmod 700 ~/.ssh
+   chmod 600 ~/.ssh/authorized_keys
+   ```
+
+4. **Add Your Public Key**
+
+   On your local machine, open your `id_rsa.pub` file:
+
+   ```sh
+   cat ~/.ssh/id_rsa.pub
+   ```
+
+   Copy the contents of `id_rsa.pub`. Then, on your EC2 instance, open the `authorized_keys` file with a text editor (like `nano` or `vim`):
+
+   ```sh
+   nano ~/.ssh/authorized_keys
+   ```
+
+   Paste the contents of `id_rsa.pub` into the `authorized_keys` file and save it.
+
+5. **Verify SSH Connection**
+
+   Disconnect from your EC2 instance and try to reconnect using your SSH key to verify that the setup is correct:
+
+   ```sh
+   ssh -i ~/.ssh/id_rsa ubuntu@your_instance_public_dns_or_ip
+   ```
+
+   Ensure you can successfully connect without being prompted for a password.
+
+### Update GitHub Actions Workflow
+
+Ensure your GitHub Actions workflow is configured correctly to use the SSH key for deployment:
+
+#### Example Workflow
+
+```yaml
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install rsync
+      run: sudo apt-get install -y rsync
+
+    - name: Deploy files to EC2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOSTNAME: ${{ secrets.HOSTNAME }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H $HOSTNAME >> ~/.ssh/known_hosts
+        rsync -avzr --delete ./web $REMOTE_USER@$HOSTNAME:/var/app
+```
+
+### Summary
+
+1. **Ensure `.ssh` directory and `authorized_keys` file exist** with correct permissions on your EC2 instance.
+2. **Add your public key** to the `authorized_keys` file.
+3. **Verify SSH connection** to your EC2 instance works without prompting for a password.
+4. **Update your GitHub Actions workflow** to use the SSH key for deployment.
+
+By following these steps, you should be able to resolve the issue and successfully deploy using `rsync` in your GitHub Actions workflow.
+
+
+### IF YOU USE PASSPHRASE IN CREATING rsa key
+
+Yes, the passphrase associated with an SSH key pair does affect its usage. Here's how:
+
+1. **SSH Key Pair Overview:**
+   - SSH keys are typically generated in pairs: a public key (`id_rsa.pub`) and a private key (`id_rsa`).
+   - The public key is shared and stored on servers or services (like GitHub), while the private key is kept secure on your local machine.
+
+2. **Passphrase:**
+   - When you generate an SSH key pair, you have the option to add a passphrase to the private key (`id_rsa`).
+   - A passphrase is an additional layer of security. It's similar to a password but is used to encrypt the private key itself.
+
+3. **Impact of Passphrase:**
+   - **Security:** Adding a passphrase makes it more difficult for someone who gains access to your private key to use it maliciously.
+   - **Usage:** When you attempt to use your SSH key (for example, to connect to an EC2 instance or to authenticate with GitHub Actions), you'll be prompted to enter the passphrase.
+   - **Automation:** If you use your SSH key in automated processes (like GitHub Actions), you need to configure your environment to provide the passphrase securely. This can involve tools like `ssh-agent` or using encrypted secrets.
+
+4. **Using SSH Keys with Passphrase in Automation (e.g., GitHub Actions):**
+   - For automation tasks where SSH keys with passphrases are involved, you typically configure tools (like `ssh-agent` or GitHub Secrets) to manage and provide the passphrase securely.
+   - This ensures that the passphrase is not exposed in plaintext in your scripts or workflows.
+
+5. **Management:**
+   - It's important to securely manage SSH keys and their passphrases:
+     - Keep the passphrase secure and confidential.
+     - Regularly rotate keys and passphrases for enhanced security.
+     - Revoke keys promptly if they are compromised or no longer needed.
+
+### Summary:
+- **Passphrase Security:** Yes, a passphrase enhances the security of your SSH key pair by encrypting the private key.
+- **Usage Considerations:** Passphrases are required for using SSH keys in environments where interactive input (like entering a passphrase) is feasible. For automation, you need to handle passphrases securely using appropriate tools and practices.
+
+By understanding the role of the passphrase with SSH keys, you can effectively manage and use them securely in various environments, including automation workflows like GitHub Actions.
+
+## settings for passphrase
+In GitHub Actions, if you need to use an SSH key with a passphrase securely, you can set up `ssh-agent` to manage the SSH key and passphrase within your workflow. Here's how you can achieve this:
+
+### Setting Up SSH Key with Passphrase in GitHub Actions
+
+1. **Generate SSH Key Pair**
+
+   If you haven't already generated an SSH key pair with a passphrase, you can do so locally. Make sure to note down the passphrase you set during the key generation process.
+
+   ```bash
+   ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+   ```
+
+2. **Add Public Key to Remote Server**
+
+   Add the contents of the generated public key (`id_rsa.pub`) to the `~/.ssh/authorized_keys` file on your remote server (e.g., EC2 instance) as explained in earlier messages.
+
+3. **Encrypt and Add Private Key to GitHub Secrets**
+
+   - Encrypt your private key (`id_rsa`) including the passphrase:
+     ```bash
+     openssl aes-256-cbc -a -salt -in id_rsa -out id_rsa.enc
+     ```
+     Replace `id_rsa` with your actual private key file name.
+
+   - Add the encrypted private key (`id_rsa.enc`) to GitHub Secrets:
+     - Go to your GitHub repository.
+     - Click on `Settings` > `Secrets` > `New repository secret`.
+     - Name the secret (e.g., `SSH_PRIVATE_KEY`) and paste the contents of `id_rsa.enc`.
+     - Click `Add secret`.
+
+4. **Configure GitHub Actions Workflow**
+
+   Now, you can configure your GitHub Actions workflow to use `ssh-agent` to decrypt the private key and handle the passphrase securely:
+
+   ```yaml
+   name: Deploy to EC2
+
+   on:
+     push:
+       branches:
+         - main
+
+   jobs:
+     deploy:
+       runs-on: ubuntu-latest
+
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
+
+         - name: Install ssh-agent
+           run: |
+             eval $(ssh-agent)
+             mkdir -p ~/.ssh
+             echo "$SSH_PRIVATE_KEY" | tr -d '\r' | openssl aes-256-cbc -d -a -out ~/.ssh/id_rsa
+             chmod 600 ~/.ssh/id_rsa
+             ssh-add ~/.ssh/id_rsa
+
+         - name: Install rsync
+           run: sudo apt-get install -y rsync
+
+         - name: Deploy files to EC2
+           env:
+             HOSTNAME: ${{ secrets.HOSTNAME }}
+             REMOTE_USER: ${{ secrets.REMOTE_USER }}
+           run: |
+             ssh-keyscan -H $HOSTNAME >> ~/.ssh/known_hosts
+             rsync -avzr --delete ./web $REMOTE_USER@$HOSTNAME:/var/app
+   ```
+
+   **Explanation of Workflow:**
+
+   - **Install ssh-agent:**
+     - Starts `ssh-agent` and decrypts the private key (`id_rsa`) using `openssl` and the passphrase stored in the `SSH_PRIVATE_KEY` secret.
+     - Adds the decrypted private key to the SSH agent.
+
+   - **Install rsync:**
+     - Installs `rsync`, a tool used for efficient file transfer.
+
+   - **Deploy files to EC2:**
+     - Uses the decrypted SSH key to connect securely to your EC2 instance (`$HOSTNAME`) as `$REMOTE_USER`.
+     - Adds the EC2 instance's SSH key (`ssh-keyscan`) to known hosts to avoid SSH prompts.
+     - Uses `rsync` to synchronize files from `./web` to `/var/app` on the EC2 instance.
+
+### Notes:
+- **Security:** Ensure that your encrypted private key (`id_rsa.enc`) and passphrase (`SSH_PRIVATE_KEY` secret) are stored securely and not exposed.
+- **Secrets Management:** Never commit sensitive information like private keys or passphrases directly into your GitHub repository.
+- **Automation:** This setup allows your GitHub Actions workflow to securely handle SSH keys with passphrases, enabling automated deployments and operations.
+
+By following these steps, you can effectively use SSH keys with passphrases in your GitHub Actions workflows, maintaining security while automating deployment tasks to your servers or cloud instances.
+
+
+### PART D : Project directory doesnt exist
+
+The error `Permission denied` suggests that the `REMOTE_USER` does not have sufficient permissions to write to `/var/app`. Here are some potential solutions:
+
+### Solution 1: Use a User with Appropriate Permissions
+Ensure that the user specified in `remote_user` has write permissions to the `/var/app` directory.
+
+### Solution 2: Use `sudo` in the Rsync Command
+If the `REMOTE_USER` can use `sudo`, you can configure the rsync command to use `sudo` on the remote host.
+
+Here’s how you can modify the GitHub Actions workflow to use `sudo` with the `burnett01/rsync-deployments` action:
+
+```yaml
+name: Deploy to staging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to staging
+        uses: burnett01/rsync-deployments@23a557dceb19f9bb960ef40cf75cab5e9b37ec1f
+        with:
+          switches: -avzr --delete
+          path: ./web
+          remote_path: /var/app
+          remote_host: ${{ secrets.HOSTNAME }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          rsync_path: sudo rsync
+```
+
+In the above example, the `rsync_path` parameter is set to `sudo rsync`, which tells `rsync` to run with `sudo` on the remote host.
+
+### Solution 3: Pre-create the Directory with Correct Permissions
+Another approach is to manually create the `/var/app` directory on the remote server with the correct permissions:
+
+1. **SSH into the remote server:**
+   ```sh
+   ssh -i path_to_your_private_key.pem REMOTE_USER@HOSTNAME
+   ```
+
+2. **Create the directory and set the appropriate permissions:**
+   ```sh
+   sudo mkdir -p /var/app
+   sudo chown REMOTE_USER:REMOTE_USER /var/app
+   ```
+
+3. **Verify permissions:**
+   ```sh
+   ls -ld /var/app
+   ```
+
+   Ensure that the directory is owned by the `REMOTE_USER`.
+
+### Solution 4: Modify `sudoers` File for Non-interactive `sudo`
+If you prefer to avoid interactive `sudo` prompts, you can configure the `sudoers` file to allow the `REMOTE_USER` to use `sudo` without a password for specific commands like `rsync`.
+
+1. **Edit the `sudoers` file:**
+   ```sh
+   sudo visudo
+   ```
+
+2. **Add the following line:**
+   ```sh
+   REMOTE_USER ALL=(ALL) NOPASSWD: /usr/bin/rsync
+   ```
+
+   Replace `/usr/bin/rsync` with the actual path to the `rsync` binary on your system.
+
+### Summary
+- **Ensure User Permissions:** Ensure `REMOTE_USER` has the necessary write permissions to `/var/app`.
+- **Use `sudo` in Rsync Command:** Modify the GitHub Actions workflow to use `sudo` for `rsync` on the remote host.
+- **Pre-create Directory:** Manually create the target directory with appropriate permissions.
+- **Modify `sudoers` File:** Allow `REMOTE_USER` to run `rsync` with `sudo` without a password.
+
+By following these steps, you should be able to resolve the `Permission denied` error and successfully deploy your files using `rsync` in your GitHub Actions workflow.
+
+
+### ENSURE ALL THE ENVIRONMENT TOOLS ARE INSTALL ON ENVIRONMENT -> PM2, NODE etc
+
+The error messages you're seeing indicate that the commands `npm`, `pm2`, and the service `nginx` are not found on your remote server. Here's how you can address these issues:
+
+### Step 1: Ensure Node.js and npm are Installed
+If `npm` is not found, it means Node.js and npm are not installed on your remote server.
+
+#### Install Node.js and npm on the Remote Server
+1. **SSH into the Remote Server:**
+   ```sh
+   ssh -i path_to_your_private_key.pem REMOTE_USER@HOSTNAME
+   ```
+
+2. **Install Node.js and npm:**
+   - For Ubuntu/Debian-based systems:
+     ```sh
+     curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+     sudo apt-get install -y nodejs
+     ```
+
+   - For CentOS/RHEL-based systems:
+     ```sh
+     curl -fsSL https://rpm.nodesource.com/setup_16.x | sudo bash -
+     sudo yum install -y nodejs
+     ```
+
+   This will install both Node.js and npm.
+
+### Step 2: Ensure PM2 is Installed
+If `pm2` is not found, you need to install PM2 globally using npm.
+
+#### Install PM2 on the Remote Server
+1. **SSH into the Remote Server (if not already connected):**
+   ```sh
+   ssh -i path_to_your_private_key.pem REMOTE_USER@HOSTNAME
+   ```
+
+2. **Install PM2 Globally:**
+   ```sh
+   sudo npm install -g pm2
+   ```
+
+### Step 3: Ensure Nginx is Installed and Running
+If the `nginx` service is not found, you need to install Nginx on your remote server.
+
+#### Install Nginx on the Remote Server
+1. **SSH into the Remote Server (if not already connected):**
+   ```sh
+   ssh -i path_to_your_private_key.pem REMOTE_USER@HOSTNAME
+   ```
+
+2. **Install Nginx:**
+   - For Ubuntu/Debian-based systems:
+     ```sh
+     sudo apt-get update
+     sudo apt-get install -y nginx
+     ```
+
+   - For CentOS/RHEL-based systems:
+     ```sh
+     sudo yum install -y epel-release
+     sudo yum install -y nginx
+     ```
+
+3. **Start and Enable Nginx Service:**
+   ```sh
+   sudo systemctl start nginx
+   sudo systemctl enable nginx
+   ```
+
+### Step 4: Update GitHub Actions Workflow
+After ensuring that the necessary software is installed on the remote server, you can update your GitHub Actions workflow to include the required steps.
+
+```yaml
+name: Deploy to staging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to staging
+        uses: burnett01/rsync-deployments@23a557dceb19f9bb960ef40cf75cab5e9b37ec1f
+        with:
+          switches: -avzr --delete
+          path: ./web
+          remote_path: /var/app
+          remote_host: ${{ secrets.HOSTNAME }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Install Node.js, npm, and PM2
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.REMOTE_USER }}@${{ secrets.HOSTNAME }} "curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash - && sudo apt-get install -y nodejs && sudo npm install -g pm2"
+
+      - name: Restart Nginx
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.REMOTE_USER }}@${{ secrets.HOSTNAME }} "sudo systemctl restart nginx"
+```
+
+### Summary
+1. **Install Node.js and npm:** Ensure they are installed on the remote server.
+2. **Install PM2:** Ensure PM2 is installed globally using npm.
+3. **Install and Start Nginx:** Ensure Nginx is installed and running on the remote server.
+4. **Update GitHub Actions Workflow:** Ensure that the workflow includes steps to handle necessary installations and service restarts.
+
+By following these steps, you should resolve the `command not found` errors and ensure that your deployment process runs smoothly.
+
+### PART E -> openning the application
+
+To access your Node.js application from the browser using the public IP `18.226.181.223` on port 80, you need to ensure that your Nginx configuration correctly forwards requests to your Node.js application and that your application is running. Here's a step-by-step guide to ensure everything is set up properly:
+
+### Step 1: Update Nginx Configuration
+
+1. **SSH into your remote server:**
+   ```sh
+   ssh -i path_to_your_private_key.pem REMOTE_USER@18.226.181.223
+   ```
+
+2. **Create or edit the Nginx configuration file for your app:**
+   ```sh
+   sudo nano /etc/nginx/sites-available/your-app
+   ```
+
+3. **Add or update the configuration to forward requests to your Node.js app:**
+   ```nginx
+   server {
+       listen 80;
+       server_name 18.226.181.223;
+
+       location / {
+           proxy_pass http://localhost:3000;  # Replace 3000 with your Node.js app's port if different
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection 'upgrade';
+           proxy_set_header Host $host;
+           proxy_cache_bypass $http_upgrade;
+       }
+   }
+   ```
+
+4. **Enable the configuration by creating a symbolic link:**
+   ```sh
+   sudo ln -s /etc/nginx/sites-available/your-app /etc/nginx/sites-enabled/
+   ```
+
+5. **Remove the default configuration if it exists (to avoid conflicts):**
+   ```sh
+   sudo rm /etc/nginx/sites-enabled/default
+   ```
+
+6. **Test the Nginx configuration:**
+   ```sh
+   sudo nginx -t
+   ```
+
+7. **Restart Nginx to apply the changes:**
+   ```sh
+   sudo systemctl restart nginx
+   ```
+
+### Step 2: Ensure Your Node.js Application is Running
+
+1. **SSH into your remote server (if not already connected):**
+   ```sh
+   ssh -i path_to_your_private_key.pem REMOTE_USER@18.226.181.223
+   ```
+
+2. **Start your Node.js application using PM2:**
+   ```sh
+   pm2 start /path/to/your/app.js --name your-app-name
+   pm2 save
+   pm2 startup
+   ```
+
+   Replace `/path/to/your/app.js` with the actual path to your Node.js application file.
+
+### Step 3: Verify Security Group Settings
+
+1. **Go to the AWS Management Console:**
+   - Navigate to the EC2 Dashboard.
+   - Click on "Instances" and select your instance.
+
+2. **Modify Security Groups:**
+   - Under the "Security" tab, click on the security group associated with your instance.
+   - Click on the "Inbound rules" tab and "Edit inbound rules".
+   - Add a rule to allow HTTP traffic on port 80:
+     - Type: `HTTP`
+     - Protocol: `TCP`
+     - Port range: `80`
+     - Source: `0.0.0.0/0` (or restrict to specific IPs for more security)
+
+### Step 4: Access Your Application
+
+Now, open your web browser and navigate to:
+```
+http://18.226.181.223
+```
+
+This should display your Node.js application if everything is set up correctly.
+
+### Troubleshooting
+
+1. **Check if your application is running:**
+   ```sh
+   pm2 list
+   ```
+
+2. **Check Nginx error logs if the application is not loading:**
+   ```sh
+   sudo tail -f /var/log/nginx/error.log
+   ```
+
+3. **Check your application logs using PM2:**
+   ```sh
+   pm2 logs your-app-name
+   ```
+
+By following these steps, you should be able to access your Node.js application from a browser using your public IP address on port 80.
