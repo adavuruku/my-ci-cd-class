@@ -1,0 +1,38 @@
+1. Project - Monolitics
+
+2. cloud - aws [vpc, ec2]
+
+3. skill: 
+
+rest
+
+environment: dev, stagging, prod
+
+#Branching strategy
+
+1. github flow
+
+2. git flow [not adviced]
+
+main
+    -> future branch (fb) [introduce changes] -> pr (from fb to main) [ CI (workflows [run test, build, lint, security scanning ...])] -> if all successful -> deploy to stagging
+
+
+deploy to stagging
+vpc -> ecs [do functional tests etc]
+
+option:
+1. you can decise to have a deployment for every pr such that every pr rasie its own ec2 instances for testing [ staging] [not cost effective]
+
+
+
+### after mergin the pr to main branch -> 
+1. deploy to production automatically
+
+3. manual trigger the deploy to production
+
+blue/green deployment
+you can manual deploy to the staging ec2 to make sure everything is fully deployed and working fine
+before switching the older ec2 serving ur clients to the staging one
+
+
