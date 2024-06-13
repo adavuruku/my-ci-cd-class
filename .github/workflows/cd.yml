@@ -42,7 +42,6 @@ jobs:
           remote_host: ${{ secrets.HOSTNAME }}
           remote_user: ${{ secrets.REMOTE_USER }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          rsync_path: sudo rsync
 
     #   - name: Install rsync
     #     run: sudo apt-get install -y rsync
