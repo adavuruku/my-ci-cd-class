@@ -7,13 +7,13 @@ on:
   pull_request:
     branches:
       - main
-    # paths:
-    #   - 'web/**'
+    paths:
+      - 'web/**'
   push:
     branches:
       - main
-    # paths:
-    #   - 'web/**'
+    paths:
+      - 'web/**'
 
 jobs:
 
@@ -24,7 +24,7 @@ jobs:
       run:
         shell: bash
         # Define the working directory for all run steps in the workflow
-        # working-directory: ./web
+        working-directory: ./web
     # Specify the OS we want the workflow to run on
     runs-on: ubuntu-latest
     # Define the steps for this job
@@ -45,7 +45,7 @@ jobs:
       run:
         shell: bash
         # Define the working directory for all run steps in the workflow
-        # working-directory: ./web
+        working-directory: ./web
     runs-on: ubuntu-latest
     steps:    
     - uses: actions/checkout@v2
