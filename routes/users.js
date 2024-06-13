@@ -9,12 +9,12 @@ router.get('/', function (req, res, next) {
       firstName: 'Sherif',
       lastName: 'Adams',
       age: 25
-    },{
+    }, {
       id: 2,
       firstName: 'Joy',
       lastName: 'Amoka',
       age: 18
-    },{
+    }, {
       id: 3,
       firstName: 'Marvel',
       lastName: 'Solo',
@@ -31,7 +31,7 @@ router.get('/:id', function (req, res, next) {
   res
     .status(200)
     .json({
-      id:  Number(req.params.id),
+      id: Number(req.params.id),
       firstName: 'Sherif',
       lastName: 'Adams',
       age: 25
