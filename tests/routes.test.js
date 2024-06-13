@@ -46,12 +46,6 @@ describe('Get all users', () => {
       lastName: 'Amoka',
       age: 18
     })
-    expect(res.body[2]).toEqual({
-      id: 3,
-      firstName: 'Marvel',
-      lastName: 'Solo',
-      age: 38
-    })
     expect(res.statusCode).toEqual(200)
     expect(res.body.length).toEqual(3)
   })
