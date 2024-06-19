@@ -1060,7 +1060,7 @@ For monitoring Spring Boot applications in production, commonly used dependencie
 By integrating these tools, you can achieve comprehensive monitoring of your Spring Boot applications, ensuring they run smoothly and efficiently in production environments.
 
 
-## 8
+## 9
 
 Handling multiple beans of the same type in a Spring Boot application requires some additional configuration to ensure that the correct bean is injected where needed. Here are several strategies to manage multiple beans of the same type:
 
