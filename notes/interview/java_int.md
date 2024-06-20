@@ -1775,3 +1775,174 @@ Shallow Copy: Person{name='Jane Doe', scores=[100, 80, 70]}
 
 - **Immutable Fields**: Changes to immutable fields (like `String`) in the shallow copy do not affect the original object because these fields are copied by value.
 - **Mutable Fields**: Changes to mutable fields (like arrays or custom objects) in the shallow copy affect the original object because these fields are copied by reference.
+
+
+
+A `HashMap` in Java is a widely-used data structure that allows storing key-value pairs. It provides fast insertion, deletion, and retrieval operations. Here's a brief explanation of how a `HashMap` works:
+
+### Core Concepts of HashMap
+
+1. **Buckets**:
+   - Internally, a `HashMap` uses an array called "buckets" to store entries.
+   - Each bucket can hold multiple entries, which are stored in a linked list or a tree (after a certain threshold is reached).
+
+2. **Hash Function**:
+   - The hash function computes an index in the array (bucket) based on the key's `hashCode`.
+   - The formula `index = hashCode % capacity` (where `capacity` is the array length) is used to determine the bucket.
+
+3. **Entries**:
+   - Each entry in the `HashMap` consists of a key, a value, a hash value, and a reference to the next entry (if there is a collision).
+
+### Key Operations
+
+1. **Insertion**:
+   - When a new key-value pair is added, the key's `hashCode` is computed, and the corresponding bucket index is found.
+   - If the bucket is empty, the entry is placed there.
+   - If the bucket already contains entries (collision), the new entry is appended to the linked list or balanced in a tree (if the list is too long).
+
+2. **Retrieval**:
+   - To retrieve a value, the key's `hashCode` is computed, and the bucket index is found.
+   - The bucket is traversed to find the entry with the matching key.
+
+3. **Deletion**:
+   - Similar to retrieval, the key's `hashCode` is used to locate the bucket.
+   - The bucket is traversed to find the entry with the matching key, which is then removed from the list or tree.
+
+### Handling Collisions
+
+Collisions occur when two keys produce the same bucket index. To handle collisions, `HashMap` employs two strategies:
+
+1. **Separate Chaining**:
+   - Each bucket contains a linked list of entries. When a collision occurs, the entry is appended to the list.
+   - For example, if two different keys map to the same bucket, they are stored sequentially in the list.
+
+2. **Treeification**:
+   - When the number of entries in a bucket exceeds a certain threshold (e.g., 8), the linked list is transformed into a balanced tree (typically a red-black tree) to improve lookup performance.
+   - This change helps keep the average time complexity of basic operations (get, put, remove) close to O(1), even with a large number of collisions.
+
+### Resizing
+
+To maintain efficient performance, `HashMap` dynamically resizes (doubles the array size) when the load factor (ratio of number of entries to bucket array size) exceeds a certain threshold (default 0.75). During resizing:
+
+- A new array is created with double the capacity.
+- All existing entries are rehashed and redistributed into the new array.
+
+### Example
+
+Here's a simple example demonstrating how to use a `HashMap`:
+
+```java
+import java.util.HashMap;
+
+public class HashMapExample {
+    public static void main(String[] args) {
+        // Creating a HashMap
+        HashMap<String, Integer> map = new HashMap<>();
+
+        // Adding key-value pairs
+        map.put("Apple", 10);
+        map.put("Banana", 20);
+        map.put("Orange", 30);
+
+        // Retrieving a value
+        System.out.println("Apple: " + map.get("Apple"));
+
+        // Removing a key-value pair
+        map.remove("Banana");
+
+        // Iterating over the HashMap
+        for (HashMap.Entry<String, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+}
+```
+
+### Conclusion
+
+`HashMap` provides an efficient way to store and retrieve data using key-value pairs with average time complexity O(1) for basic operations. It uses an array of buckets and handles collisions using separate chaining and treeification. The structure dynamically resizes to maintain performance as the number of entries grows.
+
+
+The statement "ConcurrentHashMap is not implemented even though it has a higher performance rate than HashMap" seems to reflect a misunderstanding. In reality, both `HashMap` and `ConcurrentHashMap` are implemented in the Java Collections Framework, and each serves different purposes based on the required concurrency control and performance needs.
+
+### Differences Between HashMap and ConcurrentHashMap:
+
+1. **HashMap**:
+   - **Single-threaded Use**: Designed for single-threaded applications.
+   - **No Synchronization**: Not thread-safe. Multiple threads accessing and modifying a `HashMap` can lead to data inconsistency and `ConcurrentModificationException`.
+   - **Higher Single-threaded Performance**: Generally, `HashMap` has higher performance in a single-threaded environment due to the absence of synchronization overhead.
+
+2. **ConcurrentHashMap**:
+   - **Thread-safe**: Designed for concurrent access in multi-threaded applications.
+   - **Fine-grained Synchronization**: Uses a technique called lock stripping to maintain high concurrency while providing thread safety. This allows multiple threads to read and write to the map concurrently without blocking each other excessively.
+   - **Higher Performance in Multi-threaded Context**: Provides better performance than synchronized alternatives (like `Collections.synchronizedMap`) in a multi-threaded environment.
+
+### Why Both Exist:
+
+Both `HashMap` and `ConcurrentHashMap` exist because they address different use cases:
+
+- **HashMap** is ideal for scenarios where thread safety is not a concern, such as:
+  - Local computations within a single thread.
+  - Data structures that are not shared across threads.
+
+- **ConcurrentHashMap** is essential for scenarios where concurrent access by multiple threads is required, such as:
+  - Shared caches.
+  - Real-time data processing where multiple threads read and write to the map simultaneously.
+
+### Performance Considerations:
+
+- **HashMap** will typically have better performance in single-threaded scenarios due to the lack of synchronization overhead.
+- **ConcurrentHashMap** is optimized for concurrent access and will outperform `HashMap` when used in multi-threaded environments that require thread safety.
+
+### Example Use Cases:
+
+1. **HashMap Example**:
+
+   ```java
+   import java.util.HashMap;
+   
+   public class SingleThreadedExample {
+       public static void main(String[] args) {
+           HashMap<String, String> map = new HashMap<>();
+           map.put("key1", "value1");
+           map.put("key2", "value2");
+   
+           System.out.println(map.get("key1"));
+           System.out.println(map.get("key2"));
+       }
+   }
+   ```
+
+2. **ConcurrentHashMap Example**:
+
+   ```java
+   import java.util.concurrent.ConcurrentHashMap;
+   
+   public class MultiThreadedExample {
+       public static void main(String[] args) {
+           ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+           map.put("key1", "value1");
+           map.put("key2", "value2");
+   
+           Runnable task1 = () -> {
+               map.put("key3", "value3");
+               System.out.println(map.get("key1"));
+           };
+   
+           Runnable task2 = () -> {
+               map.put("key4", "value4");
+               System.out.println(map.get("key2"));
+           };
+   
+           Thread thread1 = new Thread(task1);
+           Thread thread2 = new Thread(task2);
+   
+           thread1.start();
+           thread2.start();
+       }
+   }
+   ```
+
+### Conclusion:
+
+The choice between `HashMap` and `ConcurrentHashMap` depends on the specific requirements of your application regarding thread safety and performance. Both are implemented in the Java Collections Framework to cater to different scenarios: single-threaded vs. multi-threaded environments.
