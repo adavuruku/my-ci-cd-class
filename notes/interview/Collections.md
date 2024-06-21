@@ -328,3 +328,13 @@ Collections.unmodifiableList(numbers);
 
 UnsupportedOperationException
                    unsupportedOperationException
+
+
+
+## 
+Sequenced Collections
+The absence of a universal supertype for collections with a specified encounter order has caused recurring issues and complaints within Java’s collections framework. Additionally, the lack of consistent methods for accessing the first and last elements, as well as iterating in reverse order, has been a persistent drawback.
+
+Consider the List interface, which maintains an encounter order. While accessing the first element is straightforward with list.get(0), accessing the last element requires list.get(list.size() - 1). This inconsistency poses challenges for developers and complicates code maintenance.
+
+Although this inconvenience mentioned as the example in Collectioninterface. It also happens in Map interfaces as well.

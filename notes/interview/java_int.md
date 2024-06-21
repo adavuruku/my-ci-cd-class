@@ -1946,3 +1946,17 @@ Both `HashMap` and `ConcurrentHashMap` exist because they address different use 
 ### Conclusion:
 
 The choice between `HashMap` and `ConcurrentHashMap` depends on the specific requirements of your application regarding thread safety and performance. Both are implemented in the Java Collections Framework to cater to different scenarios: single-threaded vs. multi-threaded environments.
+
+
+
+## 
+Sealed Class
+Sealed class is a feature introduced in Java 15 to enhance the control over class inheritance and ensure that only specific subclasses can extend it. It provides a way to declare a limited set of classes that are allowed to inherit from the sealed class, while preventing other classes from extending it. Here’s a basic explanation of how sealed classes work
+
+public sealed class Shape permits Circle, Rectangle, Triangle, Square {...}
+
+In this example, the Shape class is declared as sealed using the sealed keyword. The permits keyword is used to specify the classes that are allowed to inherit from Shape.
+
+public final class TransparentRectangle extends Rectangle {...}
+public final class FilledRectangle extends Rectangle {...}
+public non-sealed class Square extends Shape {...}

@@ -1,6 +1,6 @@
 https://www.interviewbit.com/multithreading-interview-questions/
 
-3B. What is Livelock? What happens when it occurs?
+3B. What is Livelock? What happens when it occurs? [thread are not blocked but can progress bcus resource is not available]
 16. Explain the meaning of the deadlock and when it can occur?
 17. race condition -> many thread try to access a resource at same time. this can cause incosistency. [solution synchronize]
 
@@ -163,3 +163,12 @@ In this example, both `increment()` and `getCount()` are static synchronized met
 - **Static Synchronization**: Use when you need to synchronize access to static methods or static variables across all instances of a class.
 
 Each approach has its use cases depending on whether you need instance-level synchronization or class-level synchronization. It's important to consider thread safety and performance implications when applying synchronization in multi-threaded Java applications.
+
+
+
+## Virtual Thread
+
+Virtual Threads
+In previous threading model, Java’s threads directly correspond to operating system (OS) threads, resulting in limitations on the number of threads that can be created due to OS constraints. In the traditional threading model, excessive thread creation can strain the OS and incur high costs, particularly for short-lived threads.
+
+Java 21 introduces virtual threads, offering mapping between virtual threads and OS threads, allowing for theoretically unlimited virtual thread creation. This innovation addresses the limitations of traditional threading models, enabling the creation of numerous threads to meet the demands of high-throughput server applications. With virtual threads, the previous constraint on thread creation is eliminated, enabling the continuation of the thread-per-request style commonly used in server applications.
