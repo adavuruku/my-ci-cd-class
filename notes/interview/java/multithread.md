@@ -80,6 +80,8 @@ What do you mean by Multithreading? Why is it important?
 
 22. What is the synchronization process? Why use it?
 
+23. Thread life circle (NRRBT)
+
  It can be achieved in three different ways as given below: 
 
 By the synchronized method
@@ -172,3 +174,67 @@ Virtual Threads
 In previous threading model, Java’s threads directly correspond to operating system (OS) threads, resulting in limitations on the number of threads that can be created due to OS constraints. In the traditional threading model, excessive thread creation can strain the OS and incur high costs, particularly for short-lived threads.
 
 Java 21 introduces virtual threads, offering mapping between virtual threads and OS threads, allowing for theoretically unlimited virtual thread creation. This innovation addresses the limitations of traditional threading models, enabling the creation of numerous threads to meet the demands of high-throughput server applications. With virtual threads, the previous constraint on thread creation is eliminated, enabling the continuation of the thread-per-request style commonly used in server applications.
+
+
+## Preventing Dead locks
+
+Deadlocks are situations where two or more threads are blocked forever, each waiting on the other to release a resource that it needs. To resolve deadlocks in Java, you can consider several approaches:
+
+### 1. Prevention
+
+- **Lock Ordering**: Ensure that threads acquire locks in a consistent order across all parts of your application. This approach requires careful design but can prevent deadlocks by ensuring that threads always request locks in the same order.
+
+- **Timeouts**: Implement timeouts when acquiring locks. If a thread cannot acquire a lock within a specified time frame, it releases its locks and retries later, preventing potential deadlocks.
+
+### 2. Detection and Recovery
+
+- **Thread Dump Analysis**: Use tools like `jstack` or monitoring tools to analyze thread dumps. Identify threads involved in a deadlock and the resources they are waiting for. This analysis can help pinpoint where deadlocks occur and guide potential fixes.
+
+- **Recovery Mechanisms**: Implement mechanisms to recover from deadlocks once detected. This might involve releasing resources held by threads involved in a deadlock and retrying the operation.
+
+### 3. Avoidance
+
+- **Resource Allocation Graph (RAG)**: Use algorithms like Banker's Algorithm or wait-for graph to detect potential deadlocks before they occur. These algorithms analyze the allocation of resources to threads and can prevent deadlocks by avoiding unsafe resource allocations.
+
+### 4. Resolving Deadlocks Programmatically
+
+- **Reordering Locks**: If deadlock is caused by inconsistent lock ordering, refactor your code to ensure locks are acquired in a consistent order across all threads.
+
+- **Using `synchronized` Blocks**: Instead of relying on implicit locks (`synchronized` methods or blocks), use explicit locks (`ReentrantLock`) that provide more control over locking and unlocking mechanisms. They support try-lock and timed-lock operations which can help in avoiding deadlocks.
+
+### Example Scenario
+
+Here’s a simple example illustrating how you might restructure code to prevent deadlocks:
+
+```java
+class Account {
+    private int balance;
+    private final Object lock = new Object();
+
+    public void transfer(Account target, int amount) {
+        // Acquire locks in a consistent order
+        Account first = (this.hashCode() < target.hashCode()) ? this : target;
+        Account second = (first == this) ? target : this;
+
+        synchronized (first.lock) {
+            synchronized (second.lock) {
+                if (this.balance >= amount) {
+                    this.balance -= amount;
+                    target.balance += amount;
+                } else {
+                    throw new IllegalArgumentException("Insufficient balance");
+                }
+            }
+        }
+    }
+}
+```
+
+In this example, `transfer` method ensures that locks are acquired in a consistent order based on object hash codes to prevent deadlocks.
+
+### Conclusion
+
+Preventing and resolving deadlocks requires a combination of careful design, use of appropriate synchronization mechanisms, and detection strategies. Understanding the causes of deadlocks and applying the appropriate techniques can help in creating robust and deadlock-free applications.
+
+
+http://webcache.googleusercontent.com/search?q=cache:https://levelup.gitconnected.com/crack-the-concurrency-code-10-java-interview-questions-with-examples-to-ace-your-next-interview-b4dcf5c1f500&strip=0&vwsrc=1&referer=medium-parser

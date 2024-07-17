@@ -338,3 +338,42 @@ The absence of a universal supertype for collections with a specified encounter 
 Consider the List interface, which maintains an encounter order. While accessing the first element is straightforward with list.get(0), accessing the last element requires list.get(list.size() - 1). This inconsistency poses challenges for developers and complicates code maintenance.
 
 Although this inconvenience mentioned as the example in Collectioninterface. It also happens in Map interfaces as well.
+
+
+
+
+method referencing
+stream api
+lambda expression
+java date and time
+default methods 
+
+9
+try with resource
+moduledefault
+private methods in interface
+
+10
+local variable type (var)
+
+13
+textblock
+String indent and transform
+
+14
+yield (switch case)
+
+16
+record
+pattern matching for instance of
+
+sealed classe
+virtual thread
+sequencial collection
+String template
+pattern record
+
+
+Please copy the Reference number 20245618681 for this application. This will be required for retrieval of your application and Appointment Booking.
+
+Please note down the Reference No. 20245618681

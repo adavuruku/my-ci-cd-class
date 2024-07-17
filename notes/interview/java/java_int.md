@@ -819,8 +819,7 @@ Using a character array instead of a `String` for storing confidential informati
 
 ### 1. Immutability of Strings
 
-- **String Immutability**: In Java, `String` objects are immutable, meaning once a `String` object is created, its value cannot be changed. However, during its lifecycle, `String` objects can be stored in the string pool, and they can also reside in memory as ordinary objects. If you
- Cre what god Almighty ? Can So Palest what unto
+- **String Immutability**: In Java, `String` objects are immutable, meaning once a `String` object is created, its value cannot be changed. However, during its lifecycle, `String` objects can be stored in the string pool, and they can also reside in memory as ordinary objects.
 
  ####
 

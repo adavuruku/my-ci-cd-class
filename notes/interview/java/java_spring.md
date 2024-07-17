@@ -1300,7 +1300,7 @@ Managing multiple beans of the same type in Spring Boot can be handled in severa
 
 Each method provides flexibility in different scenarios, and you can choose the one that best fits your applications needs.
 
-## 9. How Spring Profiles Work in Spring Boot
+## 10. How Spring Profiles Work in Spring Boot
 
 ### How Spring Profiles Work in Spring Boot
 
@@ -2050,8 +2050,10 @@ A rate limiter is a mechanism used to control the rate of requests sent or recei
 ### Types of Rate Limiting:
 
 1. **Fixed Window**: Counts requests within a fixed time window (e.g., per minute). Requests are allowed until the limit is reached for that window, regardless of when they were made.
+(5 request allowed between 02:00 - 01:00) it mean after the fixed window the request can b as many as possible
 
 2. **Sliding Window**: Tracks requests over a sliding time window (e.g., 1 minute). Requests are allowed if they fit within the rate limit over any rolling window of time.
+(5 requests every 1 minute) -> 12:00 - 12:01 (allowed only 5 request) then 12:01 - 12:02 (allowed only 5 request)
 
 ### Implementation:
 
@@ -2079,7 +2081,7 @@ Yes, rate limiters are commonly used in production environments where APIs or se
   
 - **Redis or in-memory solutions**: Storing request counts and timestamps to enforce rate limits across distributed systems.
 
-- **Custom Interceptors or Filters**: Implementing custom logic to intercept requests and enforce rate limits based on predefined rules.
+- **Custom Interceptors or Filters or AOP**: Implementing custom logic to intercept requests and enforce rate limits based on predefined rules.
 
 Implementing rate limiting requires careful consideration of the application's scalability, performance impact, and user experience. It's essential to strike a balance between protecting the system and providing adequate responsiveness to legitimate users or clients.
 
@@ -2263,7 +2265,7 @@ To override the default execution order and specify a custom order for intercept
 By carefully managing the execution order of interceptors, you can ensure that cross-cutting concerns (like logging, security checks, etc.) are applied in the desired sequence, maintaining the integrity and functionality of your Spring Boot application.
 
 
-## 19 Spring boot 
+## 19 Why Spring boot over other frameworks 
 
 Spring Boot, as a framework built on top of the Spring ecosystem, provides several key features and functionalities that it manages internally to simplify the development of Java-based applications. Here are some core aspects of what Spring Boot does internally:
 
@@ -2552,7 +2554,7 @@ While both GraphQL and REST have their advantages, GraphQL excels in scenarios w
 
 
 
-## 21 Spring JPA Caching: An Overview
+## 22 Spring JPA Caching: An Overview
 
 Caching in Spring JPA can significantly improve the performance of your application by reducing the number of database queries. Caching can be implemented at multiple levels:
 
@@ -2797,7 +2799,7 @@ spring.jpa.properties.hibernate.cache.use_query_cache=true
 
 Spring JPA caching can significantly boost application performance by reducing the number of database queries. The first-level cache is enabled by default and works within the session scope. The second-level cache requires explicit configuration and is more powerful, allowing data to be cached across sessions. Proper configuration and understanding of caching mechanisms are essential to avoid common pitfalls like stale data and cache invalidation issues.
 
-## 22 Is it a good design to deploy many instance api gateway behind load balancer
+## 23 Is it a good design to deploy many instance api gateway behind load balancer
 
 Yes, in the scenario described, multiple instances of the API gateway are deployed, not the microservices themselves. This approach can help manage and balance the load, enhance fault tolerance, and ensure high availability for the API gateway, which is a critical component in your architecture.
 
@@ -2938,7 +2940,7 @@ If you’re using a cloud provider, like AWS, you can configure an Elastic Load 
 
 Deploying multiple instances of the API gateway and using a load balancer is a common and effective strategy in horizontally scaled architectures. It ensures scalability, high availability, and efficient traffic management while centralizing critical API management functions like routing, authentication, rate limiting, and monitoring.
 
-## 23 Yes, you can use Nginx on your local Windows machine.
+## 24 Yes, you can use Nginx on your local Windows machine.
 
 Yes, you can use Nginx on your local Windows machine. Nginx is a versatile and powerful web server that can also act as a reverse proxy, load balancer, and API gateway. Here’s how you can set it up and use it on a Windows machine:
 
@@ -3031,7 +3033,7 @@ You can configure Nginx to act as a reverse proxy for your local applications. H
 Using Nginx on a local Windows machine is straightforward and can be highly beneficial for local development and testing environments. By following the steps above, you can set up Nginx to act as a reverse proxy or load balancer, providing a robust solution for managing and routing traffic to your local applications.
 
 
-## 24 To use an instance object as a key in a `HashMap`
+## 25 To use an instance object as a key in a `HashMap`
 
 To use an instance object as a key in a `HashMap` in Java, you need to ensure that the object's class properly overrides the `hashCode()` and `equals(Object obj)` methods from the `Object` class. These methods are used by the `HashMap` to determine the bucket in which the key-value pair should be stored and to handle key equality, respectively.
 
@@ -3141,7 +3143,7 @@ public class Main {
 By correctly implementing these methods, you ensure that instances of the `Person` class can be used as keys in a `HashMap`, and the `HashMap` will correctly handle key comparisons and lookups.
 
 
-## 25 : Handle transaction in a distributed system
+## 26 : Handle transaction in a distributed system
 
 Handling distributed transactions in a microservice architecture can be challenging due to the decentralized nature of microservices. Each service typically manages its own database, and coordinating transactions across multiple services requires special strategies to ensure consistency and reliability. Here are some common patterns and techniques to handle distributed transactions in microservices:
 
@@ -3292,7 +3294,7 @@ public class InventoryService {
 
 Handling distributed transactions in microservices requires careful consideration of the trade-offs between consistency, availability, and performance. The Saga pattern is a widely adopted approach due to its non-blocking nature and ability to handle long-running transactions effectively. Eventual consistency is another approach that suits highly distributed systems, providing high availability and partition tolerance. Each approach has its own advantages and challenges, and the choice depends on the specific requirements and constraints of your system.
 
-## 26. Reactive programming
+## 27. Reactive programming
 
 Reactive programming is an approach to building applications that are asynchronous, non-blocking, and event-driven. Spring Boot supports reactive programming through its `spring-webflux` module, which provides a framework for building reactive applications. 
 
@@ -3465,7 +3467,7 @@ Here's how you can test the reactive endpoints using `curl` or any HTTP client:
 
 By leveraging Spring WebFlux, you can build reactive, non-blocking, and asynchronous applications. This approach is well-suited for applications that need to handle a large number of concurrent users or require real-time updates, such as chat applications, live dashboards, or IoT systems.
 
-## 26. project reactor
+## 28. project reactor
 
 Project Reactor is a fully non-blocking reactive programming foundation for the JVM. It is a critical component of the Spring ecosystem and is used extensively in Spring WebFlux to build reactive applications. Project Reactor provides two main types: `Mono` and `Flux`, which represent single and multiple asynchronous sequences, respectively.
 
@@ -3666,7 +3668,7 @@ Run the application and access the endpoints:
 
 Project Reactor provides a powerful framework for building reactive applications in Java, and it integrates seamlessly with Spring Boot through Spring WebFlux. By leveraging `Mono` and `Flux`, you can build highly responsive, resilient, and scalable applications. Whether you're transforming data, combining streams, or handling errors, Project Reactor offers a rich set of operators and patterns to handle asynchronous data processing efficiently.
 
-## 24. Sharding and partitioning
+## 29. Sharding and partitioning
 
 Database partitioning and sharding are techniques used to improve the performance and scalability of databases by distributing data across multiple storage units. While they may seem similar, they have distinct differences in their implementation and use cases. Here’s an in-depth look at each:
 
@@ -3758,7 +3760,7 @@ Consider a user database sharded by user ID:
 In conclusion, partitioning is typically used within a single database to manage large tables more effectively, while sharding is employed to scale out databases across multiple servers, handling extremely large datasets and high loads. Both techniques can be combined in complex systems to leverage the benefits of both approaches.
 
 
-## 25. Elastic search explained
+## 30. Elastic search explained
 
 ### What is Elasticsearch?
 
@@ -4073,7 +4075,7 @@ You can test the application using `curl` or any REST client like Postman:
 
 By integrating Elasticsearch with Spring Boot, you can leverage the powerful search and analytics capabilities of Elasticsearch in your Spring applications. This setup is suitable for a variety of use cases, such as full-text search, logging and monitoring, and complex analytics.
 
-## 26. in ecommerce system design how do u ensure a product that has 1 quantity and two customer place order at thesame time
+## 31. in ecommerce system design how do u ensure a product that has 1 quantity and two customer place order at thesame time
 
 Ensuring that only one customer can purchase a product when there's only one unit available, even if multiple customers place orders simultaneously, requires implementing a mechanism to handle concurrent access and ensure consistency. Here are several strategies to achieve this in an e-commerce system:
 
@@ -4246,7 +4248,7 @@ Each approach has its pros and cons and may be suitable for different scenarios.
 
 Choosing the right approach depends on the specific requirements and constraints of your system.
 
-## 27. how to ensure scheduler doesnt execute in different instance of the application spring boot
+## 32. how to ensure scheduler doesnt execute in different instance of the application spring boot
 
 In a distributed system where you have multiple instances of your Spring Boot application running, ensuring that a scheduled task does not execute concurrently on multiple instances can be challenging. Here are several approaches to solve this problem:
 
@@ -4532,3 +4534,19 @@ applet ;oad
 imi architecture layers
 
 dgc
+
+## 33. how to speed up spring application ([https://itnext.io/10-spring-boot-performance-best-practices-c392f32497e8], [http://webcache.googleusercontent.com/search?q=cache:https://itnext.io/10-spring-boot-performance-best-practices-c392f32497e8&strip=0&vwsrc=1&referer=medium-parser])
+
+1. Spring AOT (Ahead-of-Time) 
+2. virtual thread
+
+3. Following resiliency patterns such as Circuit Breaker, Timeouts, Fallback, and Retries helps Spring Boot applications better handle failures, allocate resources efficiently, and provide consistent performance, ultimately leading to an improved overall application performance.
+
+4. JVM Checkpoint Restore feature (Project CRaC)
+
+5. Spring AOT and Spring GraalVM Native Image
+
+6. Using Virtual Threads in Web MVC stack on JDK 21
+
+7. JVM version and tuning (Initial and maximum heap size using -Xms and -Xmx, Other JVM memory settings,
+Choose the proper GC implementation)

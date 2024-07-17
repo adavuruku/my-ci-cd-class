@@ -88,7 +88,7 @@ Linked lists are considered both linear and non-linear data structures depending
 16. What is a stack? 
 17. Where are stacks used?
 
-19. What is a postfix expression?
+## 19. What is a postfix expression?
 A postfix expression, also known as Reverse Polish Notation (RPN), is a mathematical notation in which every operator follows all of its operands. It is used to represent expressions without the need for parentheses to define operator precedence.
 
 ### Characteristics of Postfix Expressions
@@ -154,7 +154,7 @@ Postfix expressions can be easily evaluated using a stack. Here is a step-by-ste
 Postfix notation, or Reverse Polish Notation, is a way of writing expressions where operators follow their operands. This notation eliminates the need for parentheses and is well-suited for stack-based evaluation, making it efficient and easy to compute.
 
 
-20. What is a queue Data Structure? 
+## 20. What is a queue Data Structure? 
 
 21. List some applications of queue Data Structure.
 
@@ -195,4 +195,9 @@ Postfix notation, or Reverse Polish Notation, is a way of writing expressions wh
 45. Explain the max heap Data Structure.
 
 46. How do you find the height of a node in a tree?
+
+
+
+verify-mobile //to get the otp
+
 
