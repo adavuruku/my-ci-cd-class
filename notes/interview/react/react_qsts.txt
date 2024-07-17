@@ -1,0 +1,153 @@
+https://www.simplilearn.com/tutorials/reactjs-tutorial/reactjs-interview-questions
+
+https://www.edureka.co/blog/interview-questions/react-interview-questions/
+
+https://scriptedshadows.medium.com/react-js-interview-questions-and-answers-for-experienced-developers-ce78d26a3be8
+
+https://www.geeksforgeeks.org/react-interview-questions/
+
+Important read https://dev.to/gauri1504/advanced-cicd-pipeline-configuration-strategies-4mjh
+
+https://github.com/sudheerj/reactjs-interview-questions?tab=readme-ov-file#what-is-the-benefit-of-styles-modules
+
+Redux
+On the other hand, Redux offers a comprehensive state management solution by centralising the application’s state in a single store with the help of actions and reducers.
+
+Prefer useReducer if we have:
+    Small to medium-sized applications with relatively simple state management needs
+    Applications that only need to manage local state within a component or a few components
+Prefer Redux Toolkit if we have:
+    Large-scale applications with complex state management needs. Redux is more flexible and scalable than useReducer, and it has a larger ecosystem of tools and plugins.
+    Applications that need to manage global state across multiple components and/or pages
+    Applications that require middleware and advanced tools for debugging and performance optimization
+
+1. What is the React Function Component Life-Cycle Method? (Mounting, Updating, Unmounting)
+
+
+What is Side effects: Side effects are actions performed in a component that are not directly related to rendering the user interface. Common side effects include fetching data, subscribing to events, manipulating the DOM, and setting up timers.
+
+What’s Hooks in ReactJS, explain the types of hooks? [Hooks are functions that allow you to use state and other React features in functional components.] [ useState, useEffect, useContext, useReducer, useMemo, useRef, useCallback (other: useID, useTransition etc)]
+
+3. What are higher-order components?
+
+5. How the Virtual DOM works in React:
+
+6. How VDOM improves performance compared to directly manipulating the real DOM?
+
+7. What are controlled components and uncontrolled components?
+
+8. What are Pure components?
+
+9. What is the callback function?
+
+10. How to pass state data from one component to another component?
+
+What is the Prop drilling in reactjs?
+
+11. How do you pass data using props between components?
+
+We can’t change props. When we need interactivity, we’ll need to set state.
+Use props for one-way communication.
+Use state for component-internal data.
+
+12. What is an Event in React?
+
+13. What are the Event Handlers in React ?
+
+14. What are synthetic events in React?
+17. What is the difference between stateful and stateless React?
+15. What are keys in React? (What is “key” prop and what is the benefit of using it in arrays of elements?)
+16. What are ‘refs’ in React?
+
+17. What is state in React?
+
+18. What are props in React?
+
+19. How to Handle Errors in React Applications?
+
+20. Explain conditional rendering in React?
+
+21. How to optimize the performance of React app in 2024?
+
+Memo -> functional , purecomponent -> class components
+
+22. How to Secure Your React.js Application
+
+
+axios
+fetch
+
+What is reconciliation?
+Reconciliation is the process through which React updates the Browser DOM and makes React work faster. React use a diffing algorithm so that component updates are predictable and faster. React would first calculate the difference between the real DOM and the copy of DOM (Virtual DOM) when there's an update of components. React stores a copy of Browser DOM which is called Virtual DOM. When we make changes or add data, React creates a new Virtual DOM and compares it with the previous one. This comparison is done by Diffing Algorithm. Now React compares the Virtual DOM with Real DOM. It finds out the changed nodes and updates only the changed nodes in Real DOM leaving the rest nodes as it is. This process is called Reconciliation.
+
+
+child - child [
+    1. childB -> parent -> childB (COMBINE CALLBACKS AND Props)
+    2. using global state mgmt library (redux)
+    3. context api
+]
+
+
+https://codeinterview.io/blog/reactjs-coding-interview-questions/
+
+
+https://dev.to/frontendengineer/10-reactjs-coding-exercises-with-codepen-exercise-and-solution--22k7
+
+https://dummyjson.com/products/1
+
+
+// tic tac toe game
+const squares = ["X", "Y", null, "Y", "X", null, null, null,"X"]
+function calculateWinner(squares) {
+    const winningPatterns = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ]
+    
+    for (let i = 0; i < winningPatterns.length; i++) {
+      const [a, b, c] = winningPatterns[i];
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return squares[a];
+      }
+    }
+    return null;
+  }
+
+  console.log(calculateWinner(squares))
+
+
+  class Window extend React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            userName = ''
+        }
+    }
+
+    render(){
+        return (
+            <h1>{this.state.userName}</h1>
+        )
+    }
+  }
+
+  function Win = ({props}) =>{
+    const [userName, setUserName] = useState('')
+
+    return (
+        <h1>{userName}</h1>
+    )
+  }
+
+
+
+  getElementByClass(‘classname’): Gets all the HTML elements that have the specified classname.
+getElementById(‘idname’): Gets an HTML element by its ID name.
+getElementbyTagName(‘tagname’): Gets all the HTML elements that have the specified tagname.
+querySelector(): Takes CSS style selector and returns the first selected HTML element.
